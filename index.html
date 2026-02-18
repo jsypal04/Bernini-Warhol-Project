@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bernini-Warhol Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Playfair+Display:wght@400;500;600;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0D0D0D;
+      --secondary: #F5F0E8;
+      --accent-classical: #8B4513;
+      --accent-modern: #FF3366;
+      --muted: #4A4A4A;
+      --gold: #C9A962;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background-color: var(--primary);
+      color: var(--secondary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 24px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(13, 13, 13, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 16px 5%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: var(--secondary);
+    }
+
+    .logo-monogram {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      position: relative;
+    }
+
+    .logo-monogram::after {
+      content: '|';
+      margin-left: 8px;
+      color: var(--accent-modern);
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), var(--accent-modern));
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-classical {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1a1510 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8%;
+      position: relative;
+    }
+
+    .hero-classical::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30' stroke='%23C9A962' stroke-width='0.3' opacity='0.1'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    .hero-modern {
+      background: linear-gradient(135deg, var(--accent-modern) 0%, #cc2952 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 8%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-modern::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='white' opacity='0.1'/%3E%3C/svg%3E");
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translate(0, 0); }
+      to { transform: translate(-50px, -50px); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: letterReveal 0.6s forwards;
+    }
+
+    .hero-title .classical-part {
+      color: var(--gold);
+    }
+
+    .hero-title .modern-part {
+      color: var(--secondary);
+    }
+
+    @keyframes letterReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(14px, 1.5vw, 18px);
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeInUp 0.8s 1.5s forwards;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-modern .hero-subtitle {
+      color: var(--secondary);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 0.9;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(18px, 2vw, 28px);
+      color: var(--secondary);
+      opacity: 0;
+      animation: fadeInUp 0.8s 2s forwards;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-divider {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--accent-modern), var(--gold));
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeInUp 0.8s 2.5s forwards;
+    }
+
+    .scroll-indicator span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll-indicator .arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      transform: rotate(45deg);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: rotate(45deg) translateY(0); }
+      40% { transform: rotate(45deg) translateY(10px); }
+      60% { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* About Section */
+    .about {
+      padding: 120px 5%;
+      background: var(--primary);
+      position: relative;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--accent-modern), transparent);
+    }
+
+    .about-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-style: italic;
+      text-align: center;
+      color: var(--secondary);
+      margin-bottom: 60px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .about-quote.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s 0.2s ease;
+    }
+
+    .about-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .about-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      color: var(--gold);
+    }
+
+    .about-text p {
+      font-size: 16px;
+      color: var(--secondary);
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .about-visual {
+      position: relative;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s 0.4s ease;
+    }
+
+    .about-visual.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .visual-circle {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .visual-circle::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      animation: rotateSlow 20s linear infinite;
+    }
+
+    .visual-circle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, var(--accent-modern), transparent);
+      border-radius: 50%;
+    }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .visual-icon {
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .visual-icon.classical {
+      top: 20px;
+      color: var(--gold);
+    }
+
+    .visual-icon.modern {
+      bottom: 20px;
+      color: var(--accent-modern);
+    }
+
+    /* Programs Section */
+    .programs {
+      padding: 120px 5%;
+      background: linear-gradient(180deg, var(--primary) 0%, #111 100%);
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent-modern);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 500;
+      color: var(--secondary);
+    }
+
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .program-card {
+      background: rgba(245, 240, 232, 0.03);
+      border: 1px solid rgba(201, 169, 98, 0.2);
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.6s ease;
+    }
+
+    .program-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .program-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: var(--gold);
+      transition: height 0.4s ease;
+    }
+
+    .program-card.modern::before {
+      background: var(--accent-modern);
+    }
+
+    .program-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(201, 169, 98, 0.4);
+    }
+
+    .program-card:hover::before {
+      height: 100%;
+    }
+
+    .program-icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .program-card:not(.modern) .program-icon {
+      color: var(--gold);
+    }
+
+    .program-card.modern .program-icon {
+      color: var(--accent-modern);
+    }
+
+    .program-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--secondary);
+    }
+
+    .program-card p {
+      font-size: 15px;
+      color: var(--secondary);
+      opacity: 0.7;
+      line-height: 1.7;
+    }
+
+    /* Vision Section */
+    .vision {
+      padding: 160px 5%;
+      text-align: center;
+      position: relative;
+      background: var(--primary);
+      overflow: hidden;
+    }
+
+    .vision::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 51, 102, 0.08) 0%, transparent 70%);
+    }
+
+    .vision-box {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vision-border {
+      position: absolute;
+      top: -30px;
+      left: -30px;
+      right: -30px;
+      bottom: -30px;
+      border: 1px solid;
+      border-image: linear-gradient(135deg, var(--gold), var(--accent-modern)) 1;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 0.8s ease;
+    }
+
+    .vision-box:hover .vision-border {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .vision h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 400;
+      color: var(--secondary);
+      line-height: 1.5;
+      margin-bottom: 32px;
+      font-style: italic;
+    }
+
+    .vision-author {
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* Footer */
+    footer {
+      padding: 60px 5%;
+      background: #080808;
+      border-top: 1px solid rgba(201, 169, 98, 0.2);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--gold);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-size: 13px;
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-social a {
+      color: var(--secondary);
+      font-size: 18px;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+
+    .footer-social a:hover {
+      opacity: 1;
+      color: var(--accent-modern);
+    }
+
+    .footer-copyright {
+      width: 100%;
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 1024px) {
+      .programs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(13, 13, 13, 0.98);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+        transition: right 0.4s ease;
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+
+      .nav-links a {
+        font-size: 18px;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-modern {
+        display: none;
+      }
+
+      .hero-classical {
+        min-height: 100vh;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .about-visual {
+        order: -1;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    /* Animation delays for hero */
+    .hero-title span:nth-child(1) { animation-delay: 0.1s; }
+    .hero-title span:nth-child(2) { animation-delay: 0.15s; }
+    .hero-title span:nth-child(3) { animation-delay: 0.2s; }
+    .hero-title span:nth-child(4) { animation-delay: 0.25s; }
+    .hero-title span:nth-child(5) { animation-delay: 0.3s; }
+    .hero-title span:nth-child(6) { animation-delay: 0.35s; }
+    .hero-title span:nth-child(7) { animation-delay: 0.4s; }
+    .hero-title span:nth-child(8) { animation-delay: 0.45s; }
+    .hero-title span:nth-child(9) { animation-delay: 0.5s; }
+    .hero-title span:nth-child(10) { animation-delay: 0.55s; }
+    .hero-title span:nth-child(11) { animation-delay: 0.6s; }
+    .hero-title span:nth-child(12) { animation-delay: 0.65s; }
+    .hero-title span:nth-child(13) { animation-delay: 0.7s; }
+    .hero-title span:nth-child(14) { animation-delay: 0.75s; }
+    .hero-title span:nth-child(15) { animation-delay: 0.8s; }
+    .hero-title span:nth-child(16) { animation-delay: 0.85s; }
+    .hero-title span:nth-child(17) { animation-delay: 0.9s; }
+    .hero-title span:nth-child(18) { animation-delay: 0.95s; }
+    .hero-title span:nth-child(19) { animation-delay: 1s; }
+    .hero-title span:nth-child(20) { animation-delay: 1.05s; }
+    .hero-title span:nth-child(21) { animation-delay: 1.1s; }
+    .hero-title span:nth-child(22) { animation-delay: 1.15s; }
+    .hero-title span:nth-child(23) { animation-delay: 1.2s; }
+    .hero-title span:nth-child(24) { animation-delay: 1.25s; }
+    .hero-title span:nth-child(25) { animation-delay: 1.3s; }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="#" class="logo">
+      <span class="logo-monogram">B|W</span>
+      <span class="logo-text">Bernini-Warhol</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-classical">
+      <h1 class="hero-title">
+        <span class="classical-part">The&nbsp;</span>
+        <span class="modern-part">Bernini</span>
+      </h1>
+      <p class="hero-subtitle">A Global Cultural Initiative</p>
+    </div>
+    <div class="hero-modern">
+      <h1 class="hero-title">
+        <span class="modern-part">Warhol</span>
+        <span class="classical-part">&nbsp;Project</span>
+      </h1>
+      <p class="hero-tagline">Where tradition meets transformation</p>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="scroll-indicator">
+      <span>Explore</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-content">
+      <blockquote class="about-quote">
+        "Weaving connections between tradition and innovation—creating spaces where heritage and experimentation coexist."
+      </blockquote>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Two Visions, One Dialogue</h2>
+          <p>Inspired by the dialogue between Bernini's classical mastery and Warhol's radical modernity, the Bernini-Warhol Project creates spaces—physical and digital—where artists, thinkers, and audiences can meet, exchange ideas, and build a shared creative future.</p>
+          <p>At its heart, we focus on community-centered engagement, offering collaborative events, interactive workshops, and cultural bridge-building initiatives that encourage knowledge exchange across generations, cultures, and artistic traditions.</p>
+        </div>
+        <div class="about-visual">
+          <div class="visual-circle">
+            <span class="visual-icon classical">Classical</span>
+            <span class="visual-icon modern">Modern</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="programs" id="programs">
+    <div class="section-header">
+      <span class="section-label">What We Do</span>
+      <h2 class="section-title">Our Programs</h2>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card">
+        <div class="program-icon">&#9670;</div>
+        <h3>Collaborative Events & Gatherings</h3>
+        <p>Public art nights, creative labs, salons, street happenings, and festival-style programs that invite diverse voices to participate, collaborate, and experiment together.</p>
+      </div>
+      <div class="program-card modern">
+        <div class="program-icon">&#9679;</div>
+        <h3>Workshops & Dialogues</h3>
+        <p>Interactive forums, discussion circles, and skill-sharing sessions that encourage knowledge exchange across generations, cultures, and artistic traditions.</p>
+      </div>
+      <div class="program-card">
+        <div class="program-icon">&#9672;</div>
+        <h3>Cultural Bridge-Building</h3>
+        <p>Themed events that pair classical and contemporary perspectives—such as sculpture-meets-digital-art showcases, Baroque-to-pop-art conversations, or heritage-inspired innovation challenges.</p>
+      </div>
+      <div class="program-card modern">
+        <div class="program-icon">&#9733;</div>
+        <h3>Global Community Networks</h3>
+        <p>Partnerships with local arts groups, community centers, cultural hubs, and online platforms to build long-term, interlinked creative communities around the world.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="vision" id="vision">
+    <div class="vision-box">
+      <div class="vision-border"></div>
+      <h2>The Bernini–Warhol Project seeks not just to present art, but to activate community through art—creating inclusive spaces where heritage and experimentation coexist, where people learn from one another, and where new creative connections take root.</h2>
+      <p class="vision-author">Our Vision</p>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-logo">B|W Project</div>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#programs">Programs</a>
+        <a href="#vision">Vision</a>
+        <a href="#">Privacy</a>
+      </div>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">&#9673;</a>
+        <a href="#" aria-label="Twitter">&#9674;</a>
+        <a href="#" aria-label="LinkedIn">&#9675;</a>
+      </div>
+      <p class="footer-copyright">&copy; 2026 The Bernini-Warhol Project. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+    });
+
+    // Close menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // Scroll animations with Intersection Observer
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Add staggered delay for program cards
+          if (entry.target.classList.contains('program-card')) {
+            const cards = document.querySelectorAll('.program-card');
+            const cardIndex = Array.from(cards).indexOf(entry.target);
+            entry.target.style.transitionDelay = `${cardIndex * 0.1}s`;
+          }
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements
+    document.querySelectorAll('.about-quote, .about-text, .about-visual, .program-card, .vision-box').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
