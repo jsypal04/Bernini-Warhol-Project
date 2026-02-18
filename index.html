@@ -703,6 +703,14 @@
     }
 
     @media (max-width: 768px) {
+      nav {
+        padding: 16px 5%;
+      }
+
+      .logo-text {
+        display: none;
+      }
+
       .nav-links {
         position: fixed;
         top: 0;
@@ -731,14 +739,48 @@
 
       .hero {
         grid-template-columns: 1fr;
+        min-height: 100vh;
+      }
+
+      .hero-classical,
+      .hero-modern {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 6%;
       }
 
       .hero-modern {
-        display: none;
+        background: linear-gradient(180deg, var(--accent-modern) 0%, #cc2952 100%);
+        min-height: 50vh;
       }
 
       .hero-classical {
-        min-height: 100vh;
+        min-height: 50vh;
+        background: linear-gradient(180deg, #1a1510 0%, var(--primary) 100%);
+      }
+
+      .hero-divider {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: clamp(32px, 10vw, 48px);
+      }
+
+      .hero-subtitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+
+      .hero-tagline {
+        font-size: 16px;
+      }
+
+      .scroll-indicator {
+        bottom: 24px;
       }
 
       .about-grid {
